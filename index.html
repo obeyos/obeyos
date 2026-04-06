@@ -2,136 +2,156 @@
 <html lang="he" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>גלגל משפחת בן יוסף</title>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; background-color: #F5F7FA; display: flex; flex-direction: column; align-items: center; min-height: 100vh; }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; margin: 0; background-color: #1A237E; color: white; display: flex; flex-direction: column; align-items: center; min-height: 100vh; overflow-x: hidden; }
         
         /* דף כניסה */
-        #welcome-screen { background-color: #1A237E; width: 100%; height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; color: white; position: fixed; z-index: 100; }
-        .welcome-emoji { font-size: 80px; margin-bottom: 20px; }
-        .welcome-title { font-size: 24px; font-weight: 300; margin: 0; }
-        .welcome-name { font-size: 40px; font-weight: bold; margin: 10px 0; }
-        .divider { width: 80px; height: 4px; background: #FFD700; margin: 30px 0; border-radius: 2px; }
-        .btn-green { background: #00C853; color: white; border: none; padding: 15px 50px; font-size: 22px; font-weight: bold; border-radius: 30px; cursor: pointer; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
-
-        /* תפריט משימות */
-        #menu-screen { padding: 20px; display: none; text-align: center; width: 100%; max-width: 500px; }
-        .grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin-top: 20px; }
-        .card { background: white; width: 140px; height: 130px; border-radius: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(0,0,0,0.1); cursor: pointer; border: none; }
-        .card-icon { font-size: 40px; }
-        .card-text { font-size: 18px; font-weight: bold; margin-top: 10px; color: #34495E; }
-
-        /* הגלגל */
-        #wheel-screen { display: none; flex-direction: column; align-items: center; padding: 20px; width: 100%; }
-        .task-header { font-size: 32px; font-weight: bold; margin-bottom: 20px; color: #2C3E50; }
-        .wheel-container { position: relative; width: 300px; height: 300px; margin: 20px 0; }
-        #wheel { width: 100%; height: 100%; border-radius: 50%; border: 5px solid #2C3E50; background: white; position: relative; transition: transform 6s cubic-bezier(0.1, 0, 0.2, 1); overflow: hidden; }
-        .pointer { width: 0; height: 0; border-left: 15px solid transparent; border-right: 15px solid transparent; border-top: 35px solid #FFD700; position: absolute; top: -10px; left: 50%; transform: translateX(-50%); z-index: 10; }
+        #welcome-screen { text-align: center; padding-top: 100px; width: 100%; height: 100vh; background: linear-gradient(180deg, #1A237E 0%, #3949AB 100%); }
         
-        .segment { position: absolute; width: 50%; height: 100%; left: 50%; transform-origin: left center; display: flex; align-items: center; justify-content: flex-end; padding-right: 15px; box-sizing: border-box; }
-        .segment-text { color: white; font-weight: bold; font-size: 14px; text-shadow: 1px 1px 2px rgba(0,0,0,0.5); transform: rotate(0deg); width: 60px; text-align: center; }
+        /* תפריט משימות */
+        #menu-screen { display: none; padding: 20px; width: 100%; max-width: 400px; text-align: center; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; }
+        .card { background: white; border-radius: 15px; padding: 20px; display: flex; flex-direction: column; align-items: center; cursor: pointer; border: none; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
+        .card-icon { font-size: 35px; margin-bottom: 10px; }
+        .card-text { color: #1A237E; font-weight: bold; font-size: 16px; }
 
-        .back-link { margin-top: 30px; color: #3F51B5; font-weight: bold; text-decoration: underline; cursor: pointer; }
+        /* הגלגל המשופר */
+        #wheel-screen { display: none; flex-direction: column; align-items: center; width: 100%; padding-top: 30px; }
+        .wheel-outer { position: relative; width: 320px; height: 320px; margin: 30px 0; border: 8px solid #FFD700; border-radius: 50%; box-shadow: 0 0 20px rgba(0,0,0,0.5); background: white; }
+        #wheel { width: 100%; height: 100%; border-radius: 50%; position: relative; transition: transform 5s cubic-bezier(0.15, 0, 0.15, 1); overflow: hidden; }
+        .pointer { width: 0; height: 0; border-left: 15px solid transparent; border-right: 15px solid transparent; border-top: 35px solid #FFD700; position: absolute; top: -20px; left: 50%; transform: translateX(-50%); z-index: 20; filter: drop-shadow(0 2px 5px rgba(0,0,0,0.5)); }
+        
+        canvas { width: 100%; height: 100%; border-radius: 50%; }
+
+        .btn-main { background: #00C853; color: white; border: none; padding: 15px 45px; font-size: 20px; font-weight: bold; border-radius: 50px; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.3); margin-top: 20px; }
+        .back-btn { margin-top: 25px; color: #FFD700; cursor: pointer; text-decoration: underline; font-weight: bold; }
     </style>
 </head>
 <body>
 
     <div id="welcome-screen">
-        <div class="welcome-emoji">🎡</div>
-        <p class="welcome-title">ברוכים הבאים לגלגל המזל</p>
-        <h1 class="welcome-name">משפחת בן יוסף</h1>
-        <div class="divider"></div>
-        <button class="btn-green" onclick="showMenu()">כניסה להגרלה</button>
+        <div style="font-size: 70px;">🎡</div>
+        <p style="font-size: 20px; opacity: 0.9;">ברוכים הבאים לגלגל המזל</p>
+        <h1 style="font-size: 36px; margin: 10px 0;">משפחת בן יוסף</h1>
+        <div style="width: 60px; height: 4px; background: #FFD700; margin: 30px auto;"></div>
+        <button class="btn-main" onclick="showMenu()">כניסה להגרלה</button>
     </div>
 
     <div id="menu-screen">
-        <h2 style="color:#2C3E50">בחר משימה:</h2>
+        <h2>בחר משימה:</h2>
         <div class="grid" id="categoryGrid"></div>
-        <p class="back-link" onclick="location.reload()">חזרה לדף הבית</p>
+        <p class="back-btn" onclick="location.reload()">חזרה לדף הבית</p>
     </div>
 
     <div id="wheel-screen">
-        <div class="task-header" id="currentTask">כביסה</div>
-        <div class="wheel-container">
+        <h2 id="currentTask" style="font-size: 32px; color: #FFD700;"></h2>
+        <div class="wheel-outer">
             <div class="pointer"></div>
-            <div id="wheel"></div>
+            <canvas id="wheelCanvas" width="500" height="500"></canvas>
         </div>
-        <button class="btn-green" id="spinBtn" onclick="spin()">סובב את הגלגל!</button>
-        <p id="waitMsg" style="color:#e67e22; font-weight:bold; margin-top:15px; display:none;">מי יזכה?</p>
-        <p class="back-link" onclick="showMenu()">🔙 בחירת משימה אחרת</p>
+        <button class="btn-main" id="spinBtn" onclick="spin()">סובב את הגלגל!</button>
+        <p class="back-btn" onclick="showMenu()">🔙 בחירת משימה אחרת</p>
     </div>
 
     <script>
         const categories = [
             { id: 'כביסה', icon: '🧺' }, { id: 'מדיח', icon: '🍽️' },
-            { id: 'מקלחת', icon: '🚿' }, { id: 'לסדר סלון', icon: '🛋️' },
+            { id: 'מקלחת', icon: '🚿' }, { id: 'סדר בסלון', icon: '🛋️' },
             { id: 'להוריד פח', icon: '🗑️' }, { id: 'לשטוף כלים', icon: '🧽' }
         ];
 
-        const segments = ["אופיר", "דניאל", "אופיר", "דניאל", "אופיר", "דניאל", "אופיר", "דניאל", "אופיר", "דניאל"];
-        let currentTask = "";
+        const names = ["אופיר", "דניאל", "אופיר", "דניאל", "אופיר", "דניאל", "אופיר", "דניאל", "אופיר", "דניאל"];
+        let currentRotation = 0;
         let isSpinning = false;
+        let selectedTask = "";
 
-        // בניית התפריט
-        const grid = document.getElementById('categoryGrid');
-        categories.forEach(cat => {
-            const card = document.createElement('button');
-            card.className = 'card';
-            card.onclick = () => showWheel(cat.id);
-            card.innerHTML = `<span class="card-icon">${cat.icon}</span><span class="card-text">${cat.id}</span>`;
-            grid.appendChild(card);
-        });
+        // ציור הגלגל על ה-Canvas (השיטה הכי אמינה)
+        function drawWheel() {
+            const canvas = document.getElementById('wheelCanvas');
+            const ctx = canvas.getContext('2d');
+            const centerX = canvas.width / 2;
+            const centerY = canvas.height / 2;
+            const radius = canvas.width / 2;
+            const sliceAngle = (2 * Math.PI) / names.length;
 
-        // בניית הגלגל
-        const wheel = document.getElementById('wheel');
-        segments.forEach((name, i) => {
-            const deg = i * 36;
-            const seg = document.createElement('div');
-            seg.className = 'segment';
-            seg.style.transform = `rotate(${deg}deg)`;
-            seg.style.backgroundColor = i % 2 === 0 ? '#FF5252' : '#448AFF';
-            // יצירת הרקע של הגזרה (משולש)
-            seg.style.clipPath = "polygon(0 50%, 100% 0, 100% 100%)";
-            seg.innerHTML = `<span class="segment-text" style="transform: rotate(0deg)">${name}</span>`;
-            wheel.appendChild(seg);
-        });
+            names.forEach((name, i) => {
+                const angle = i * sliceAngle;
+                
+                // ציור הגזרה
+                ctx.beginPath();
+                ctx.fillStyle = i % 2 === 0 ? '#FF5252' : '#448AFF';
+                ctx.moveTo(centerX, centerY);
+                ctx.arc(centerX, centerY, radius, angle, angle + sliceAngle);
+                ctx.lineTo(centerX, centerY);
+                ctx.fill();
+                ctx.stroke();
+
+                // כתיבת השם
+                ctx.save();
+                ctx.translate(centerX, centerY);
+                ctx.rotate(angle + sliceAngle / 2);
+                ctx.textAlign = "right";
+                ctx.fillStyle = "white";
+                ctx.font = "bold 34px Assistant, sans-serif";
+                ctx.fillText(name, radius - 30, 12);
+                ctx.restore();
+            });
+        }
 
         function showMenu() {
             document.getElementById('welcome-screen').style.display = 'none';
             document.getElementById('wheel-screen').style.display = 'none';
             document.getElementById('menu-screen').style.display = 'block';
+            
+            const grid = document.getElementById('categoryGrid');
+            if (grid.children.length === 0) {
+                categories.forEach(cat => {
+                    const card = document.createElement('button');
+                    card.className = 'card';
+                    card.onclick = () => showWheel(cat.id);
+                    card.innerHTML = `<span class="card-icon">${cat.icon}</span><span class="card-text">${cat.id}</span>`;
+                    grid.appendChild(card);
+                });
+            }
         }
 
         function showWheel(task) {
-            currentTask = task;
+            selectedTask = task;
             document.getElementById('currentTask').innerText = task;
             document.getElementById('menu-screen').style.display = 'none';
             document.getElementById('wheel-screen').style.display = 'flex';
-            wheel.style.transform = `rotate(0deg)`;
+            drawWheel();
         }
 
         function spin() {
             if (isSpinning) return;
             isSpinning = true;
-            document.getElementById('spinBtn').style.backgroundColor = '#95a5a6';
-            document.getElementById('waitMsg').style.display = 'block';
+            const btn = document.getElementById('spinBtn');
+            btn.disabled = true;
+            btn.style.opacity = '0.5';
 
-            const randomRotation = Math.floor(Math.random() * 360) + 3600; // 10 סיבובים + רנדומלי
-            wheel.style.transform = `rotate(${randomRotation}deg)`;
+            const extraSpins = Math.floor(Math.random() * 360) + 2880; // 8 סיבובים מינימום
+            currentRotation += extraSpins;
+            
+            const canvas = document.getElementById('wheelCanvas');
+            canvas.style.transition = "transform 5s cubic-bezier(0.15, 0, 0.15, 1)";
+            canvas.style.transform = `rotate(${currentRotation}deg)`;
 
             setTimeout(() => {
                 isSpinning = false;
-                document.getElementById('spinBtn').style.backgroundColor = '#00C853';
-                document.getElementById('waitMsg').style.display = 'none';
+                btn.disabled = false;
+                btn.style.opacity = '1';
+                
+                // חישוב הזוכה (הפנייה של ה-0 מעלות היא ימינה, אז צריך לתקן למעלה)
+                const winAngle = (currentRotation % 360);
+                const normalizedAngle = (360 - (winAngle % 360) + 270) % 360;
+                const winnerIndex = Math.floor(normalizedAngle / (360 / names.length));
+                const winner = names[winnerIndex % names.length];
 
-                // חישוב הזוכה
-                const actualAngle = (360 - (randomRotation % 360)) % 360;
-                const index = Math.floor(actualAngle / 36);
-                const winner = segments[index % 10];
-
-                alert(`${winner}, תעשה ${currentTask}!`);
-            }, 6000);
+                alert(`התוצאה: ${winner} עושה ${selectedTask}!`);
+            }, 5200);
         }
     </script>
 </body>
