@@ -5,28 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>גלגל משפחת בן יוסף</title>
     <style>
-        /* עיצוב אקספו מקורי */
         body { font-family: sans-serif; margin: 0; background-color: #E3F2FD; display: flex; flex-direction: column; align-items: center; min-height: 100vh; }
         
+        /* מסך כניסה */
         #welcome-screen { background-color: #1A237E; width: 100%; height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; color: white; position: fixed; z-index: 100; }
-        .welcome-emoji { font-size: 80px; margin-bottom: 10px; }
+        .welcome-emoji { font-size: 80px; }
         .divider { width: 80px; height: 4px; background: #FFD700; margin: 30px 0; }
         
+        /* תפריט משימות - כתוב מראש ב-HTML */
         #menu-screen { display: none; padding: 20px; width: 100%; max-width: 500px; text-align: center; }
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 25px; }
-        
-        /* הכרטיסיות הלבנות מהאפליקציה */
-        .card { background: white; border-radius: 20px; padding: 30px 10px; display: flex; flex-direction: column; align-items: center; cursor: pointer; border: none; box-shadow: 0 4px 10px rgba(0,0,0,0.1); transition: 0.2s; }
-        .card:active { transform: scale(0.95); background-color: #f0f0f0; }
+        .card { background: white; border-radius: 20px; padding: 30px 10px; display: flex; flex-direction: column; align-items: center; cursor: pointer; border: none; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
         .card-icon { font-size: 40px; margin-bottom: 10px; }
         .card-text { color: #1A237E; font-weight: bold; font-size: 18px; }
 
+        /* מסך הגלגל */
         #wheel-screen { display: none; flex-direction: column; align-items: center; width: 100%; padding-top: 20px; }
         #task-title { color: #1A237E; font-size: 32px; font-weight: bold; margin-bottom: 10px; }
-        
         .wheel-outer { position: relative; width: 320px; height: 320px; margin: 40px 0; }
         .pointer { width: 0; height: 0; border-left: 15px solid transparent; border-right: 15px solid transparent; border-top: 35px solid #FFD700; position: absolute; top: -20px; left: 50%; transform: translateX(-50%); z-index: 20; }
-        #canvas-holder { width: 100%; height: 100%; border: 8px solid #1A237E; border-radius: 50%; background: white; overflow: hidden; box-shadow: 0 0 20px rgba(0,0,0,0.1); }
+        #canvas-holder { width: 100%; height: 100%; border: 8px solid #1A237E; border-radius: 50%; background: white; overflow: hidden; }
 
         .btn-green { background: #00C853; color: white; border: none; padding: 18px 50px; font-size: 22px; font-weight: bold; border-radius: 40px; cursor: pointer; box-shadow: 0 5px 15px rgba(0,0,0,0.2); margin-top: 20px; }
         .back-link { margin-top: 30px; color: #1A237E; font-weight: bold; text-decoration: underline; cursor: pointer; }
@@ -36,15 +34,34 @@
 
     <div id="welcome-screen">
         <div class="welcome-emoji">🎡</div>
-        <p style="font-size: 20px; opacity: 0.8; margin: 0;">ברוכים הבאים לגלגל המזל</p>
-        <h1 style="font-size: 40px; margin: 10px 0;">משפחת בן יוסף</h1>
+        <p style="font-size: 20px; opacity: 0.8;">ברוכים הבאים לגלגל המזל</p>
+        <h1 style="font-size: 40px;">משפחת בן יוסף</h1>
         <div class="divider"></div>
         <button class="btn-green" onclick="showMenu()">כניסה להגרלה</button>
     </div>
 
     <div id="menu-screen">
-        <h2>בחר משימה:</h2>
-        <div class="grid" id="mainGrid"></div>
+        <h2 style="color: #1A237E;">בחר משימה:</h2>
+        <div class="grid">
+            <button class="card" onclick="openWheel('כביסה')">
+                <span class="card-icon">🧺</span><span class="card-text">כביסה</span>
+            </button>
+            <button class="card" onclick="openWheel('מדיח')">
+                <span class="card-icon">🍽️</span><span class="card-text">מדיח</span>
+            </button>
+            <button class="card" onclick="openWheel('מקלחת')">
+                <span class="card-icon">🚿</span><span class="card-text">מקלחת</span>
+            </button>
+            <button class="card" onclick="openWheel('סדר בסלון')">
+                <span class="card-icon">🛋️</span><span class="card-text">סדר בסלון</span>
+            </button>
+            <button class="card" onclick="openWheel('להוריד פח')">
+                <span class="card-icon">🗑️</span><span class="card-text">להוריד פח</span>
+            </button>
+            <button class="card" onclick="openWheel('לשטוף כלים')">
+                <span class="card-icon">🧽</span><span class="card-text">לשטוף כלים</span>
+            </button>
+        </div>
         <p class="back-link" onclick="location.reload()">חזרה</p>
     </div>
 
@@ -61,15 +78,24 @@
     </div>
 
     <script>
-        const categories = [
-            { id: 'כביסה', icon: '🧺' }, { id: 'מדיח', icon: '🍽️' },
-            { id: 'מקלחת', icon: '🚿' }, { id: 'סדר בסלון', icon: '🛋️' },
-            { id: 'להוריד פח', icon: '🗑️' }, { id: 'לשטוף כלים', icon: '🧽' }
-        ];
-
         const names = ["אופיר", "דניאל", "אופיר", "דניאל", "אופיר", "דניאל", "אופיר", "דניאל", "אופיר", "דניאל"];
         let rotation = 0;
         let isSpinning = false;
+        let currentTask = "";
+
+        function showMenu() {
+            document.getElementById('welcome-screen').style.display = 'none';
+            document.getElementById('wheel-screen').style.display = 'none';
+            document.getElementById('menu-screen').style.display = 'block';
+        }
+
+        function openWheel(task) {
+            currentTask = task;
+            document.getElementById('task-title').innerText = task;
+            document.getElementById('menu-screen').style.display = 'none';
+            document.getElementById('wheel-screen').style.display = 'flex';
+            drawWheel();
+        }
 
         function drawWheel() {
             const canvas = document.getElementById('wheelCanvas');
@@ -85,57 +111,5 @@
                 ctx.arc(size/2, size/2, size/2, angle, angle + slice);
                 ctx.fill();
                 ctx.strokeStyle = 'white';
-                ctx.lineWidth = 3;
+                ctx.lineWidth = 4;
                 ctx.stroke();
-
-                ctx.save();
-                ctx.translate(size/2, size/2);
-                ctx.rotate(angle + slice/2);
-                ctx.textAlign = "right";
-                ctx.fillStyle = "white";
-                ctx.font = "bold 40px sans-serif";
-                ctx.fillText(name, size/2 - 40, 15);
-                ctx.restore();
-            });
-        }
-
-        function showMenu() {
-            document.getElementById('welcome-screen').style.display = 'none';
-            document.getElementById('wheel-screen').style.display = 'none';
-            document.getElementById('menu-screen').style.display = 'block';
-            
-            const grid = document.getElementById('mainGrid');
-            if (grid.children.length === 0) {
-                categories.forEach(cat => {
-                    const card = document.createElement('button');
-                    card.className = 'card';
-                    card.onclick = () => {
-                        document.getElementById('task-title').innerText = cat.id;
-                        document.getElementById('menu-screen').style.display = 'none';
-                        document.getElementById('wheel-screen').style.display = 'flex';
-                        drawWheel();
-                    };
-                    card.innerHTML = `<span class="card-icon">${cat.icon}</span><span class="card-text">${cat.id}</span>`;
-                    grid.appendChild(card);
-                });
-            }
-        }
-
-        function spin() {
-            if (isSpinning) return;
-            isSpinning = true;
-            const canvas = document.getElementById('wheelCanvas');
-            const newSpin = Math.floor(Math.random() * 360) + 3600; 
-            rotation += newSpin;
-            canvas.style.transform = `rotate(${rotation}deg)`;
-
-            setTimeout(() => {
-                isSpinning = false;
-                const final = (360 - (rotation % 360) + 270) % 360;
-                const idx = Math.floor(final / (360/10));
-                alert("התוצאה: " + names[idx % 10]);
-            }, 5100);
-        }
-    </script>
-</body>
-</html>
