@@ -5,32 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>גלגל משפחת בן יוסף</title>
     <style>
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; margin: 0; background-color: #E3F2FD; display: flex; flex-direction: column; align-items: center; min-height: 100vh; }
+        /* עיצוב כללי - בדיוק כמו באקספו */
+        body { font-family: system-ui, -apple-system, sans-serif; margin: 0; background-color: #E3F2FD; display: flex; flex-direction: column; align-items: center; min-height: 100vh; }
         
-        /* דף כניסה - כחול עמוק */
-        #welcome-screen { text-align: center; width: 100%; height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; background-color: #1A237E; color: white; position: fixed; z-index: 100; transition: 0.5s; }
+        /* מסך כניסה כחול כהה */
+        #welcome-screen { background-color: #1A237E; width: 100%; height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; color: white; position: fixed; z-index: 100; }
         .welcome-emoji { font-size: 80px; margin-bottom: 10px; }
-        .divider { width: 80px; height: 4px; background: #FFD700; margin: 30px 0; border-radius: 2px; }
-
-        /* תפריט משימות - רקע כחול בהיר */
-        #menu-screen { display: none; padding: 20px; width: 100%; max-width: 450px; text-align: center; box-sizing: border-box; }
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 30px; }
-        .card { background: white; border-radius: 20px; padding: 30px 10px; display: flex; flex-direction: column; align-items: center; cursor: pointer; border: none; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
-        .card-icon { font-size: 45px; margin-bottom: 10px; }
+        .divider { width: 80px; height: 4px; background: #FFD700; margin: 30px 0; }
+        
+        /* תפריט משימות - גריד ריבועים לבנים */
+        #menu-screen { display: none; padding: 20px; width: 100%; max-width: 500px; text-align: center; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 30px; padding: 10px; }
+        .card { background: white; border-radius: 20px; padding: 35px 10px; display: flex; flex-direction: column; align-items: center; cursor: pointer; border: none; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .card-icon { font-size: 45px; margin-bottom: 12px; }
         .card-text { color: #1A237E; font-weight: bold; font-size: 20px; }
 
         /* מסך הגלגל */
         #wheel-screen { display: none; flex-direction: column; align-items: center; width: 100%; padding-top: 20px; }
-        .wheel-container { position: relative; width: 330px; height: 330px; margin: 40px 0; }
-        #canvas-wrapper { width: 100%; height: 100%; border: 10px solid #1A237E; border-radius: 50%; background: white; box-shadow: 0 0 25px rgba(0,0,0,0.2); position: relative; overflow: hidden; }
-        .pointer { width: 0; height: 0; border-left: 20px solid transparent; border-right: 20px solid transparent; border-top: 40px solid #FFD700; position: absolute; top: -30px; left: 50%; transform: translateX(-50%); z-index: 20; filter: drop-shadow(0 3px 4px rgba(0,0,0,0.4)); }
-        
-        .btn-green { background: #00C853; color: white; border: none; padding: 18px 55px; font-size: 24px; font-weight: bold; border-radius: 40px; cursor: pointer; box-shadow: 0 6px 15px rgba(0,0,0,0.2); margin-top: 25px; }
-        .back-link { margin-top: 35px; color: #1A237E; font-weight: bold; text-decoration: underline; cursor: pointer; font-size: 18px; }
-        h2 { color: #1A237E; font-size: 32px; margin-bottom: 5px; }
-    </style>
-</head>
-<body>
+        #task-title { color: #1A237E; font-size: 34px; font-weight: bold; margin-bottom: 10px; }
+        .wheel-outer { position: relative; width: 340px; height: 340px; margin: 40px 0; }
+        .pointer { width: 0; height: 0; border-left: 20px solid transparent; border-right: 20px solid transparent; border-top: 40px solid #FFD700; position: absolute; top: -25px; left: 50%; transform: translateX(-50%); z-index: 20; filter: drop-shadow(0 4px 4px rgba(0,0,0,0.3)); }
+        #canvas-holder { width: 100%; height: 100%; border: 10px solid #1A237E; border-radius: 50%; background: white; box-shadow: 0 0 30px rgba(0,0,0,0.2); overflow: hidden; }
 
-    <div id="welcome-screen">
-        <div class="welcome-emoji
+        .btn-green { background: #00C853; color: white; border: none; padding: 20px 60px; font-size: 24px; font-weight: bold; border-radius: 50px; cursor: pointer; box-shadow: 0 6px 15px rgba(0,0,0
